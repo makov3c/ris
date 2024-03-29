@@ -52,7 +52,7 @@ datapoint = {'image': pet_img, 'segmentation_mask': mask_img}
 def load_image(datapoint):
     input_image = datapoint['image']
     input_mask = datapoint['segmentation_mask']
-
+    """
     # Initialize lists to hold resized slices
     resized_image_slices = []
     resized_mask_slices = []
@@ -66,6 +66,7 @@ def load_image(datapoint):
     # Stack resized slices along third dimension
     input_image = tf.stack(resized_image_slices, axis=2)
     input_mask = tf.stack(resized_mask_slices, axis=2)
+    """
 
     input_image, input_mask = normalize(input_image, input_mask)
 
@@ -89,13 +90,13 @@ BUFFER_SIZE = 1000
 # https://www.tensorflow.org/api_docs/python/tf/data/Dataset
 # da lahko konstruiramo datasete pravilne oblike
 
-train_dataset = tf.data.Dataset.from_tensor_slices([1, 2, 3]) # kako passati najine podatke sem notri v pravem formatu?
-test_dataset = tf.data.Dataset.from_tensor_slices([4, 5, 6])
+train_dataset = tf.data.Dataset.from_tensor_slices(datapoint) # kako passati najine podatke sem notri v pravem formatu?
+test_dataset = tf.data.Dataset.from_tensor_slices(datapoint)
 
 dataset = {'train': train_dataset, 'test': test_dataset}
 
 # dataset is dictionary with keys 'train' and 'test', where values are tf.data.Dataset objects
 train_images = dataset['train'].map(load_image, num_parallel_calls=tf.data.AUTOTUNE)
-test_images = dataset['test'].map(load_image, num_parallel_calls=tf.data.AUTOTUNE)
+test_images = dataset['test'].map(load_image, num_parallel_calls=tf.data.AUTOTUNE) # periodično kliče load_image
 
 
